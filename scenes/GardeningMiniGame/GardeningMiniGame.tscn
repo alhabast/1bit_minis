@@ -1,0 +1,879 @@
+[gd_scene load_steps=32 format=3 uid="uid://b4481v0ej7q3v"]
+
+[ext_resource type="Script" uid="uid://bjod8s0m1cb6s" path="res://scripts/minigames/gardening/gardening_gamelogic.gd" id="1_d1f6l"]
+[ext_resource type="Texture2D" uid="uid://ctrs0536a6ilg" path="res://assets/gardening/bug.png" id="2_yfe0y"]
+[ext_resource type="Script" uid="uid://rhp3iaxem6sc" path="res://scripts/minigames/gardening/bug_patrol.gd" id="3_rnuuo"]
+[ext_resource type="Texture2D" uid="uid://bbxpcfi62p0s" path="res://assets/gardening/BG.png" id="5_mex0m"]
+[ext_resource type="Texture2D" uid="uid://tc2tr15858ad" path="res://assets/gardening/leaves/Basil_01.PNG" id="6_kg073"]
+[ext_resource type="Texture2D" uid="uid://dsi4dlnflkdi1" path="res://assets/gardening/leaves/Basil_02.PNG" id="7_dybb2"]
+[ext_resource type="Texture2D" uid="uid://dahl8kr1ou67q" path="res://assets/gardening/leaves/Basil_03.PNG" id="8_n2qtx"]
+[ext_resource type="Texture2D" uid="uid://cv2d5r7sgr628" path="res://assets/gardening/leaves/Basil_04.PNG" id="9_4e74s"]
+[ext_resource type="Texture2D" uid="uid://bhlx547amvgp4" path="res://assets/gardening/leaves/Bush.PNG" id="10_6fs28"]
+[ext_resource type="Texture2D" uid="uid://vjkm68fygkqj" path="res://assets/gardening/leaves/Mint_01.PNG" id="11_mbpgl"]
+[ext_resource type="Texture2D" uid="uid://hyb403nnuejd" path="res://assets/gardening/leaves/Mint_02.PNG" id="12_4ale7"]
+[ext_resource type="Script" uid="uid://dcs0qjd0wacqk" path="res://scripts/minigames/gardening/plant_rustle.gd" id="12_64vxl"]
+[ext_resource type="Texture2D" uid="uid://psph4hqst83k" path="res://assets/gardening/leaves/Mint_03.PNG" id="13_kt526"]
+[ext_resource type="Texture2D" uid="uid://o75kca818yev" path="res://assets/gardening/leaves/Mint_04.PNG" id="14_x3bjp"]
+[ext_resource type="Texture2D" uid="uid://tjy2py4uyvc4" path="res://assets/gardening/leaves/Rosemary_01.PNG" id="15_ucc6i"]
+[ext_resource type="Texture2D" uid="uid://c3ox8ag4q66uq" path="res://assets/gardening/leaves/Rosemary_02.PNG" id="16_1vtrp"]
+[ext_resource type="Texture2D" uid="uid://d0hnq15f76urn" path="res://assets/gardening/leaves/Rosemary_03.PNG" id="17_wy2hm"]
+[ext_resource type="Texture2D" uid="uid://7hfu6i6flc4c" path="res://assets/gardening/leaves/Rosemary_04.PNG" id="18_244jh"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_xff52"]
+radius = 14.0
+
+[sub_resource type="Animation" id="Animation_6iwma"]
+length = 0.001
+loop_mode = 2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="Animation" id="Animation_p6fv7"]
+resource_name = "rustle"
+length = 1.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.133333, 0.333333, 0.7, 1.2),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.0, -0.0523599, 0.0349066, -0.00872665, 0.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_0u0qq"]
+_data = {
+&"RESET": SubResource("Animation_6iwma"),
+&"rustle": SubResource("Animation_p6fv7")
+}
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i8rtt"]
+atlas = ExtResource("2_yfe0y")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xu2bn"]
+atlas = ExtResource("2_yfe0y")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_srewx"]
+atlas = ExtResource("2_yfe0y")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_oek8v"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_i8rtt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xu2bn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_srewx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xu2bn")
+}],
+"loop": true,
+"name": &"default",
+"speed": 3.0
+}]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_b1cin"]
+particles_animation = true
+particles_anim_h_frames = 3
+particles_anim_v_frames = 1
+particles_anim_loop = true
+
+[sub_resource type="Curve" id="Curve_fivne"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -2.88676, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_2r5o7"]
+radius = 36.0
+height = 118.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_b7nmw"]
+radius = 16.0
+height = 60.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_d4cta"]
+radius = 8.24619
+height = 103.572
+
+[node name="Gardening" type="Node2D"]
+script = ExtResource("1_d1f6l")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+visible = false
+zoom = Vector2(2.4, 2.4)
+
+[node name="Background" type="Sprite2D" parent="."]
+texture = ExtResource("5_mex0m")
+
+[node name="Basil01" type="Area2D" parent="."]
+collision_layer = 5
+script = ExtResource("12_64vxl")
+
+[node name="plant" type="Sprite2D" parent="Basil01"]
+position = Vector2(-62.6399, -0.181275)
+texture = ExtResource("6_kg073")
+offset = Vector2(61.7118, -4.0754)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Basil01"]
+position = Vector2(-59, 8)
+shape = SubResource("CircleShape2D_xff52")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Basil01"]
+root_node = NodePath("../plant")
+libraries = {
+&"": SubResource("AnimationLibrary_0u0qq")
+}
+
+[node name="Bug" type="AnimatedSprite2D" parent="Basil01"]
+position = Vector2(-60, 6)
+rotation = -1.5708
+scale = Vector2(0.25, 0.25)
+sprite_frames = SubResource("SpriteFrames_oek8v")
+autoplay = "default"
+frame_progress = 0.588206
+script = ExtResource("3_rnuuo")
+
+[node name="RayCast2D" type="RayCast2D" parent="Basil01/Bug"]
+visible = false
+scale = Vector2(1.88235, 1.88235)
+target_position = Vector2(3.05176e-05, 4)
+collision_mask = 4
+hit_from_inside = true
+collide_with_areas = true
+
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="Basil01/Bug"]
+remote_path = NodePath("../../CPUParticles2D")
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="Basil01"]
+material = SubResource("CanvasItemMaterial_b1cin")
+position = Vector2(-60, 6)
+rotation = -1.5708
+scale = Vector2(0.25, 0.25)
+emitting = false
+amount = 1
+texture = ExtResource("2_yfe0y")
+lifetime = 0.5
+one_shot = true
+direction = Vector2(0, 0)
+spread = 90.0
+initial_velocity_max = 500.0
+angular_velocity_min = -720.0
+angular_velocity_max = 720.0
+angle_max = 360.0
+scale_amount_min = 0.25
+scale_amount_max = 0.25
+scale_amount_curve = SubResource("Curve_fivne")
+anim_speed_min = 5.0
+anim_speed_max = 5.0
+
+[node name="Basil02" type="Area2D" parent="."]
+position = Vector2(3, 1)
+collision_layer = 5
+script = ExtResource("12_64vxl")
+
+[node name="plant" type="Sprite2D" parent="Basil02"]
+position = Vector2(-97, 15)
+texture = ExtResource("7_dybb2")
+offset = Vector2(97, -15)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Basil02"]
+position = Vector2(-96, 15)
+shape = SubResource("CircleShape2D_xff52")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Basil02"]
+root_node = NodePath("../plant")
+libraries = {
+&"": SubResource("AnimationLibrary_0u0qq")
+}
+
+[node name="Bug" type="AnimatedSprite2D" parent="Basil02"]
+position = Vector2(-99, 12)
+rotation = -1.5708
+scale = Vector2(0.25, 0.25)
+sprite_frames = SubResource("SpriteFrames_oek8v")
+autoplay = "default"
+frame_progress = 0.588206
+script = ExtResource("3_rnuuo")
+
+[node name="RayCast2D" type="RayCast2D" parent="Basil02/Bug"]
+visible = false
+scale = Vector2(1.88235, 1.88235)
+target_position = Vector2(3.05176e-05, 4)
+collision_mask = 4
+hit_from_inside = true
+collide_with_areas = true
+
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="Basil02/Bug"]
+remote_path = NodePath("../../CPUParticles2D")
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="Basil02"]
+material = SubResource("CanvasItemMaterial_b1cin")
+position = Vector2(-99, 12)
+rotation = -1.5708
+scale = Vector2(0.25, 0.25)
+emitting = false
+amount = 1
+texture = ExtResource("2_yfe0y")
+lifetime = 0.5
+one_shot = true
+direction = Vector2(0, 0)
+spread = 90.0
+initial_velocity_max = 500.0
+angular_velocity_min = -720.0
+angular_velocity_max = 720.0
+angle_max = 360.0
+scale_amount_min = 0.25
+scale_amount_max = 0.25
+scale_amount_curve = SubResource("Curve_fivne")
+anim_speed_min = 5.0
+anim_speed_max = 5.0
+
+[node name="Basil03" type="Area2D" parent="."]
+position = Vector2(6, 2)
+collision_layer = 5
+script = ExtResource("12_64vxl")
+
+[node name="plant" type="Sprite2D" parent="Basil03"]
+position = Vector2(-85, -20)
+texture = ExtResource("8_n2qtx")
+offset = Vector2(82, 19)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Basil03"]
+position = Vector2(-86, -19)
+shape = SubResource("CircleShape2D_xff52")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Basil03"]
+root_node = NodePath("../plant")
+libraries = {
+&"": SubResource("AnimationLibrary_0u0qq")
+}
+
+[node name="Bug" type="AnimatedSprite2D" parent="Basil03"]
+position = Vector2(-83, -20)
+rotation = -1.5708
+scale = Vector2(0.25, 0.25)
+sprite_frames = SubResource("SpriteFrames_oek8v")
+autoplay = "default"
+frame_progress = 0.588206
+script = ExtResource("3_rnuuo")
+
+[node name="RayCast2D" type="RayCast2D" parent="Basil03/Bug"]
+scale = Vector2(1.88235, 1.88235)
+target_position = Vector2(0, 4)
+collision_mask = 4
+hit_from_inside = true
+collide_with_areas = true
+
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="Basil03/Bug"]
+remote_path = NodePath("../../CPUParticles2D")
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="Basil03"]
+material = SubResource("CanvasItemMaterial_b1cin")
+position = Vector2(-83, -20)
+rotation = -1.5708
+scale = Vector2(0.25, 0.25)
+emitting = false
+amount = 1
+texture = ExtResource("2_yfe0y")
+lifetime = 0.5
+one_shot = true
+direction = Vector2(0, 0)
+spread = 90.0
+initial_velocity_max = 500.0
+angular_velocity_min = -720.0
+angular_velocity_max = 720.0
+angle_max = 360.0
+scale_amount_min = 0.25
+scale_amount_max = 0.25
+scale_amount_curve = SubResource("Curve_fivne")
+anim_speed_min = 5.0
+anim_speed_max = 5.0
+
+[node name="Basil04" type="Area2D" parent="."]
+position = Vector2(3, 1)
+collision_layer = 5
+script = ExtResource("12_64vxl")
+
+[node name="plant" type="Sprite2D" parent="Basil04"]
+position = Vector2(-126, -3)
+texture = ExtResource("9_4e74s")
+offset = Vector2(126, 3)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Basil04"]
+position = Vector2(-127, 0)
+shape = SubResource("CircleShape2D_xff52")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Basil04"]
+root_node = NodePath("../plant")
+libraries = {
+&"": SubResource("AnimationLibrary_0u0qq")
+}
+
+[node name="Bug" type="AnimatedSprite2D" parent="Basil04"]
+position = Vector2(-133, 0)
+rotation = -1.5708
+scale = Vector2(0.25, 0.25)
+sprite_frames = SubResource("SpriteFrames_oek8v")
+autoplay = "default"
+frame_progress = 0.588206
+script = ExtResource("3_rnuuo")
+
+[node name="RayCast2D" type="RayCast2D" parent="Basil04/Bug"]
+visible = false
+scale = Vector2(1.88235, 1.88235)
+target_position = Vector2(3.05176e-05, 4)
+collision_mask = 4
+hit_from_inside = true
+collide_with_areas = true
+
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="Basil04/Bug"]
+remote_path = NodePath("../../CPUParticles2D")
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="Basil04"]
+material = SubResource("CanvasItemMaterial_b1cin")
+position = Vector2(-133, 0)
+rotation = -1.5708
+scale = Vector2(0.25, 0.25)
+emitting = false
+amount = 1
+texture = ExtResource("2_yfe0y")
+lifetime = 0.5
+one_shot = true
+direction = Vector2(0, 0)
+spread = 90.0
+initial_velocity_max = 500.0
+angular_velocity_min = -720.0
+angular_velocity_max = 720.0
+angle_max = 360.0
+scale_amount_min = 0.25
+scale_amount_max = 0.25
+scale_amount_curve = SubResource("Curve_fivne")
+anim_speed_min = 5.0
+anim_speed_max = 5.0
+
+[node name="Bush" type="Area2D" parent="."]
+position = Vector2(3, 1)
+collision_layer = 5
+script = ExtResource("12_64vxl")
+
+[node name="plant" type="Sprite2D" parent="Bush"]
+position = Vector2(0, -33)
+texture = ExtResource("10_6fs28")
+offset = Vector2(-0.167187, 32.9563)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Bush"]
+position = Vector2(1, -33)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_2r5o7")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Bush"]
+root_node = NodePath("../plant")
+libraries = {
+&"": SubResource("AnimationLibrary_0u0qq")
+}
+
+[node name="Bug" type="AnimatedSprite2D" parent="Bush"]
+scale = Vector2(0.25, 0.25)
+sprite_frames = SubResource("SpriteFrames_oek8v")
+autoplay = "default"
+frame_progress = 0.588206
+script = ExtResource("3_rnuuo")
+
+[node name="RayCast2D" type="RayCast2D" parent="Bush/Bug"]
+visible = false
+scale = Vector2(1.88235, 1.88235)
+target_position = Vector2(3.05176e-05, 4)
+collision_mask = 4
+hit_from_inside = true
+collide_with_areas = true
+
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="Bush/Bug"]
+remote_path = NodePath("../../CPUParticles2D")
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="Bush"]
+material = SubResource("CanvasItemMaterial_b1cin")
+scale = Vector2(0.25, 0.25)
+emitting = false
+amount = 1
+texture = ExtResource("2_yfe0y")
+lifetime = 0.5
+one_shot = true
+direction = Vector2(0, 0)
+spread = 90.0
+initial_velocity_max = 500.0
+angular_velocity_min = -720.0
+angular_velocity_max = 720.0
+angle_max = 360.0
+scale_amount_min = 0.25
+scale_amount_max = 0.25
+scale_amount_curve = SubResource("Curve_fivne")
+anim_speed_min = 5.0
+anim_speed_max = 5.0
+
+[node name="Mint01" type="Area2D" parent="."]
+position = Vector2(125.195, -85.525)
+collision_layer = 5
+script = ExtResource("12_64vxl")
+
+[node name="plant" type="Sprite2D" parent="Mint01"]
+position = Vector2(3.525, 6.195)
+texture = ExtResource("11_mbpgl")
+offset = Vector2(-116, 83)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Mint01"]
+position = Vector2(1.80499, 11.525)
+shape = SubResource("CircleShape2D_xff52")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Mint01"]
+root_node = NodePath("../plant")
+libraries = {
+&"": SubResource("AnimationLibrary_0u0qq")
+}
+
+[node name="Bug" type="AnimatedSprite2D" parent="Mint01"]
+position = Vector2(-5.195, 10.525)
+rotation = -1.5708
+scale = Vector2(0.25, 0.25)
+sprite_frames = SubResource("SpriteFrames_oek8v")
+autoplay = "default"
+frame_progress = 0.588206
+script = ExtResource("3_rnuuo")
+
+[node name="RayCast2D" type="RayCast2D" parent="Mint01/Bug"]
+visible = false
+scale = Vector2(1.88235, 1.88235)
+target_position = Vector2(3.05176e-05, 4)
+collision_mask = 4
+hit_from_inside = true
+collide_with_areas = true
+
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="Mint01/Bug"]
+remote_path = NodePath("../../CPUParticles2D")
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="Mint01"]
+material = SubResource("CanvasItemMaterial_b1cin")
+position = Vector2(-5.195, 10.525)
+rotation = -1.5708
+scale = Vector2(0.25, 0.25)
+emitting = false
+amount = 1
+texture = ExtResource("2_yfe0y")
+lifetime = 0.5
+one_shot = true
+direction = Vector2(0, 0)
+spread = 90.0
+initial_velocity_max = 500.0
+angular_velocity_min = -720.0
+angular_velocity_max = 720.0
+angle_max = 360.0
+scale_amount_min = 0.25
+scale_amount_max = 0.25
+scale_amount_curve = SubResource("Curve_fivne")
+anim_speed_min = 5.0
+anim_speed_max = 5.0
+
+[node name="Mint02" type="Area2D" parent="."]
+position = Vector2(3, 1)
+collision_layer = 5
+script = ExtResource("12_64vxl")
+
+[node name="plant" type="Sprite2D" parent="Mint02"]
+position = Vector2(157, -90)
+texture = ExtResource("12_4ale7")
+offset = Vector2(-157, 90)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Mint02"]
+position = Vector2(158, -87)
+shape = SubResource("CircleShape2D_xff52")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Mint02"]
+root_node = NodePath("../plant")
+libraries = {
+&"": SubResource("AnimationLibrary_0u0qq")
+}
+
+[node name="Bug" type="AnimatedSprite2D" parent="Mint02"]
+position = Vector2(154, -87)
+rotation = -1.5708
+scale = Vector2(0.25, 0.25)
+sprite_frames = SubResource("SpriteFrames_oek8v")
+autoplay = "default"
+frame_progress = 0.588206
+script = ExtResource("3_rnuuo")
+
+[node name="RayCast2D" type="RayCast2D" parent="Mint02/Bug"]
+visible = false
+scale = Vector2(1.88235, 1.88235)
+target_position = Vector2(3.05176e-05, 4)
+collision_mask = 4
+hit_from_inside = true
+collide_with_areas = true
+
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="Mint02/Bug"]
+remote_path = NodePath("../../CPUParticles2D")
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="Mint02"]
+material = SubResource("CanvasItemMaterial_b1cin")
+position = Vector2(154, -87)
+rotation = -1.5708
+scale = Vector2(0.25, 0.25)
+emitting = false
+amount = 1
+texture = ExtResource("2_yfe0y")
+lifetime = 0.5
+one_shot = true
+direction = Vector2(0, 0)
+spread = 90.0
+initial_velocity_max = 500.0
+angular_velocity_min = -720.0
+angular_velocity_max = 720.0
+angle_max = 360.0
+scale_amount_min = 0.25
+scale_amount_max = 0.25
+scale_amount_curve = SubResource("Curve_fivne")
+anim_speed_min = 5.0
+anim_speed_max = 5.0
+
+[node name="Mint03" type="Area2D" parent="."]
+position = Vector2(3, 1)
+collision_layer = 5
+script = ExtResource("12_64vxl")
+
+[node name="plant" type="Sprite2D" parent="Mint03"]
+position = Vector2(176, -120)
+texture = ExtResource("13_kt526")
+offset = Vector2(-176, 120)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Mint03"]
+position = Vector2(177, -119)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_b7nmw")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Mint03"]
+root_node = NodePath("../plant")
+libraries = {
+&"": SubResource("AnimationLibrary_0u0qq")
+}
+
+[node name="Bug" type="AnimatedSprite2D" parent="Mint03"]
+position = Vector2(166, -117)
+rotation = -2.52121
+scale = Vector2(0.25, 0.25)
+sprite_frames = SubResource("SpriteFrames_oek8v")
+autoplay = "default"
+frame_progress = 0.588206
+script = ExtResource("3_rnuuo")
+
+[node name="RayCast2D" type="RayCast2D" parent="Mint03/Bug"]
+visible = false
+scale = Vector2(1.88235, 1.88235)
+target_position = Vector2(3.05176e-05, 4)
+collision_mask = 4
+hit_from_inside = true
+collide_with_areas = true
+
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="Mint03/Bug"]
+remote_path = NodePath("../../CPUParticles2D")
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="Mint03"]
+material = SubResource("CanvasItemMaterial_b1cin")
+position = Vector2(166, -117)
+rotation = -2.52121
+scale = Vector2(0.25, 0.25)
+emitting = false
+amount = 1
+texture = ExtResource("2_yfe0y")
+lifetime = 0.5
+one_shot = true
+direction = Vector2(0, 0)
+spread = 90.0
+initial_velocity_max = 500.0
+angular_velocity_min = -720.0
+angular_velocity_max = 720.0
+angle_max = 360.0
+scale_amount_min = 0.25
+scale_amount_max = 0.25
+scale_amount_curve = SubResource("Curve_fivne")
+anim_speed_min = 5.0
+anim_speed_max = 5.0
+
+[node name="Mint04" type="Area2D" parent="."]
+position = Vector2(3, 1)
+collision_layer = 5
+script = ExtResource("12_64vxl")
+
+[node name="plant" type="Sprite2D" parent="Mint04"]
+position = Vector2(105, -118)
+texture = ExtResource("14_x3bjp")
+offset = Vector2(-105, 118)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Mint04"]
+position = Vector2(102, -118)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_b7nmw")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Mint04"]
+root_node = NodePath("../plant")
+libraries = {
+&"": SubResource("AnimationLibrary_0u0qq")
+}
+
+[node name="Bug" type="AnimatedSprite2D" parent="Mint04"]
+position = Vector2(85, -118)
+rotation = -1.5708
+scale = Vector2(0.25, 0.25)
+sprite_frames = SubResource("SpriteFrames_oek8v")
+autoplay = "default"
+frame_progress = 0.588206
+script = ExtResource("3_rnuuo")
+
+[node name="RayCast2D" type="RayCast2D" parent="Mint04/Bug"]
+visible = false
+scale = Vector2(1.88235, 1.88235)
+target_position = Vector2(3.05176e-05, 4)
+collision_mask = 4
+hit_from_inside = true
+collide_with_areas = true
+
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="Mint04/Bug"]
+remote_path = NodePath("../../CPUParticles2D")
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="Mint04"]
+material = SubResource("CanvasItemMaterial_b1cin")
+position = Vector2(85, -118)
+rotation = -1.5708
+scale = Vector2(0.25, 0.25)
+emitting = false
+amount = 1
+texture = ExtResource("2_yfe0y")
+lifetime = 0.5
+one_shot = true
+direction = Vector2(0, 0)
+spread = 90.0
+initial_velocity_max = 500.0
+angular_velocity_min = -720.0
+angular_velocity_max = 720.0
+angle_max = 360.0
+scale_amount_min = 0.25
+scale_amount_max = 0.25
+scale_amount_curve = SubResource("Curve_fivne")
+anim_speed_min = 5.0
+anim_speed_max = 5.0
+
+[node name="Rosemary01" type="Area2D" parent="."]
+position = Vector2(3, 1)
+collision_layer = 5
+script = ExtResource("12_64vxl")
+
+[node name="plant" type="Sprite2D" parent="Rosemary01"]
+position = Vector2(-125, -36)
+texture = ExtResource("15_ucc6i")
+offset = Vector2(125, 36)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Rosemary01"]
+position = Vector2(-105, -90)
+rotation = 0.341487
+shape = SubResource("CapsuleShape2D_d4cta")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Rosemary01"]
+root_node = NodePath("../plant")
+libraries = {
+&"": SubResource("AnimationLibrary_0u0qq")
+}
+
+[node name="Bug" type="AnimatedSprite2D" parent="Rosemary01"]
+position = Vector2(-119, -56)
+rotation = -2.49465
+scale = Vector2(0.25, 0.25)
+sprite_frames = SubResource("SpriteFrames_oek8v")
+autoplay = "default"
+frame_progress = 0.588206
+script = ExtResource("3_rnuuo")
+
+[node name="RayCast2D" type="RayCast2D" parent="Rosemary01/Bug"]
+visible = false
+scale = Vector2(1.88235, 1.88235)
+target_position = Vector2(3.05176e-05, 4)
+collision_mask = 4
+hit_from_inside = true
+collide_with_areas = true
+
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="Rosemary01/Bug"]
+remote_path = NodePath("../../CPUParticles2D")
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="Rosemary01"]
+material = SubResource("CanvasItemMaterial_b1cin")
+position = Vector2(-119, -56)
+rotation = -2.49465
+scale = Vector2(0.25, 0.25)
+emitting = false
+amount = 1
+texture = ExtResource("2_yfe0y")
+lifetime = 0.5
+one_shot = true
+direction = Vector2(0, 0)
+spread = 90.0
+initial_velocity_max = 500.0
+angular_velocity_min = -720.0
+angular_velocity_max = 720.0
+angle_max = 360.0
+scale_amount_min = 0.25
+scale_amount_max = 0.25
+scale_amount_curve = SubResource("Curve_fivne")
+anim_speed_min = 5.0
+anim_speed_max = 5.0
+
+[node name="Rosemary02" type="Area2D" parent="."]
+position = Vector2(3, 1)
+collision_layer = 5
+script = ExtResource("12_64vxl")
+
+[node name="plant" type="Sprite2D" parent="Rosemary02"]
+position = Vector2(-153, -32)
+texture = ExtResource("16_1vtrp")
+offset = Vector2(150, 31)
+
+[node name="plant2" type="Sprite2D" parent="Rosemary02/plant"]
+position = Vector2(-10, -8)
+texture = ExtResource("17_wy2hm")
+offset = Vector2(163, 40)
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Rosemary02"]
+position = Vector2(-167, -93)
+rotation = -0.243255
+shape = SubResource("CapsuleShape2D_d4cta")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Rosemary02"]
+position = Vector2(-141, -86)
+rotation = 0.183915
+shape = SubResource("CapsuleShape2D_d4cta")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Rosemary02"]
+root_node = NodePath("../plant")
+libraries = {
+&"": SubResource("AnimationLibrary_0u0qq")
+}
+
+[node name="Bug" type="AnimatedSprite2D" parent="Rosemary02"]
+position = Vector2(-135, -115)
+rotation = 0.148521
+scale = Vector2(0.25, 0.25)
+sprite_frames = SubResource("SpriteFrames_oek8v")
+autoplay = "default"
+frame_progress = 0.588206
+script = ExtResource("3_rnuuo")
+
+[node name="RayCast2D" type="RayCast2D" parent="Rosemary02/Bug"]
+visible = false
+scale = Vector2(1.88235, 1.88235)
+target_position = Vector2(3.05176e-05, 8.50001)
+collision_mask = 4
+hit_from_inside = true
+collide_with_areas = true
+
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="Rosemary02/Bug"]
+remote_path = NodePath("../../CPUParticles2D")
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="Rosemary02"]
+material = SubResource("CanvasItemMaterial_b1cin")
+position = Vector2(-135, -115)
+rotation = 0.148521
+scale = Vector2(0.25, 0.25)
+emitting = false
+amount = 1
+texture = ExtResource("2_yfe0y")
+lifetime = 0.5
+one_shot = true
+direction = Vector2(0, 0)
+spread = 90.0
+initial_velocity_max = 500.0
+angular_velocity_min = -720.0
+angular_velocity_max = 720.0
+angle_max = 360.0
+scale_amount_min = 0.25
+scale_amount_max = 0.25
+scale_amount_curve = SubResource("Curve_fivne")
+anim_speed_min = 5.0
+anim_speed_max = 5.0
+
+[node name="Rosemary04" type="Area2D" parent="."]
+position = Vector2(3, 1)
+collision_layer = 5
+script = ExtResource("12_64vxl")
+
+[node name="plant" type="Sprite2D" parent="Rosemary04"]
+position = Vector2(-186, -33)
+texture = ExtResource("18_244jh")
+offset = Vector2(186, 33)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Rosemary04"]
+position = Vector2(-195, -88)
+rotation = -0.148353
+shape = SubResource("CapsuleShape2D_d4cta")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Rosemary04"]
+root_node = NodePath("../plant")
+libraries = {
+&"": SubResource("AnimationLibrary_0u0qq")
+}
+
+[node name="Bug" type="AnimatedSprite2D" parent="Rosemary04"]
+position = Vector2(-195, -78)
+rotation = -2.1732
+scale = Vector2(0.25, 0.25)
+sprite_frames = SubResource("SpriteFrames_oek8v")
+autoplay = "default"
+frame_progress = 0.588206
+script = ExtResource("3_rnuuo")
+
+[node name="RayCast2D" type="RayCast2D" parent="Rosemary04/Bug"]
+visible = false
+scale = Vector2(1.88235, 1.88235)
+target_position = Vector2(3.05176e-05, 4)
+collision_mask = 4
+hit_from_inside = true
+collide_with_areas = true
+
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="Rosemary04/Bug"]
+remote_path = NodePath("../../CPUParticles2D")
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="Rosemary04"]
+material = SubResource("CanvasItemMaterial_b1cin")
+position = Vector2(-195, -78)
+rotation = -2.1732
+scale = Vector2(0.25, 0.25)
+emitting = false
+amount = 1
+texture = ExtResource("2_yfe0y")
+lifetime = 0.5
+one_shot = true
+direction = Vector2(0, 0)
+spread = 90.0
+initial_velocity_max = 500.0
+angular_velocity_min = -720.0
+angular_velocity_max = 720.0
+angle_max = 360.0
+scale_amount_min = 0.25
+scale_amount_max = 0.25
+scale_amount_curve = SubResource("Curve_fivne")
+anim_speed_min = 5.0
+anim_speed_max = 5.0

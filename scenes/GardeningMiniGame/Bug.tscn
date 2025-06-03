@@ -1,0 +1,84 @@
+[gd_scene load_steps=9 format=3 uid="uid://su411dy3vqp7"]
+
+[ext_resource type="Script" uid="uid://rhp3iaxem6sc" path="res://scripts/minigames/gardening/bug_patrol.gd" id="1_45cjs"]
+[ext_resource type="Texture2D" uid="uid://ctrs0536a6ilg" path="res://assets/sprites/minigame/gardening/bug.png" id="2_at4bl"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_41yoc"]
+particles_animation = true
+particles_anim_h_frames = 3
+particles_anim_v_frames = 1
+particles_anim_loop = true
+
+[sub_resource type="Curve" id="Curve_lluax"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -2.88676, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i8rtt"]
+atlas = ExtResource("2_at4bl")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xu2bn"]
+atlas = ExtResource("2_at4bl")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_srewx"]
+atlas = ExtResource("2_at4bl")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ca1n0"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_i8rtt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xu2bn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_srewx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xu2bn")
+}],
+"loop": true,
+"name": &"default",
+"speed": 3.0
+}]
+
+[node name="Bug" type="Node2D"]
+script = ExtResource("1_45cjs")
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+rotation = -1.5708
+scale = Vector2(0.470587, 0.470587)
+target_position = Vector2(3.05176e-05, 4)
+collision_mask = 4
+hit_from_inside = true
+collide_with_areas = true
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="."]
+material = SubResource("CanvasItemMaterial_41yoc")
+rotation = -1.5708
+scale = Vector2(0.25, 0.25)
+emitting = false
+amount = 1
+lifetime = 0.5
+one_shot = true
+texture = ExtResource("2_at4bl")
+direction = Vector2(0, 0)
+spread = 90.0
+initial_velocity_max = 500.0
+angular_velocity_min = -720.0
+angular_velocity_max = 720.0
+angle_max = 360.0
+scale_amount_min = 0.25
+scale_amount_max = 0.25
+scale_amount_curve = SubResource("Curve_lluax")
+anim_speed_min = 5.0
+anim_speed_max = 5.0
+
+[node name="Bug_Sprite" type="AnimatedSprite2D" parent="."]
+rotation = -1.5708
+scale = Vector2(0.25, 0.25)
+sprite_frames = SubResource("SpriteFrames_ca1n0")
+autoplay = "default"
