@@ -1,6 +1,6 @@
 [gd_scene load_steps=11 format=4 uid="uid://b2q3frx0b0hsm"]
 
-[ext_resource type="Script" path="res://scripts/bulb_cleaner_logic.gd" id="1_nyoer"]
+[ext_resource type="Script" uid="uid://b04iblugxv3ls" path="res://scripts/bulb_cleaner_logic.gd" id="1_nyoer"]
 [ext_resource type="Texture2D" uid="uid://dqoq80ao1uegu" path="res://assets/1bit 16px patterns and tiles.png" id="1_yvyht"]
 [ext_resource type="Script" path="res://scripts/tilepainter.gd" id="2_pkphr"]
 [ext_resource type="Texture2D" uid="uid://bwysvq63gaf6c" path="res://assets/bulb/bulb.png" id="3_ah1af"]
