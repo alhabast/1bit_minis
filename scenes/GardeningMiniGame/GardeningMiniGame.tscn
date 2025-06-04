@@ -1,8 +1,9 @@
-[gd_scene load_steps=32 format=3 uid="uid://b4481v0ej7q3v"]
+[gd_scene load_steps=33 format=3 uid="uid://b4481v0ej7q3v"]
 
 [ext_resource type="Script" uid="uid://bjod8s0m1cb6s" path="res://scripts/minigames/gardening/gardening_gamelogic.gd" id="1_d1f6l"]
 [ext_resource type="Texture2D" uid="uid://ctrs0536a6ilg" path="res://assets/gardening/bug.png" id="2_yfe0y"]
 [ext_resource type="Script" uid="uid://rhp3iaxem6sc" path="res://scripts/minigames/gardening/bug_patrol.gd" id="3_rnuuo"]
+[ext_resource type="FontFile" uid="uid://bsjh5xe0fjrgq" path="res://assets/fonts/Tiny5-Regular.ttf" id="3_t5m2y"]
 [ext_resource type="Texture2D" uid="uid://bbxpcfi62p0s" path="res://assets/gardening/BG.png" id="5_mex0m"]
 [ext_resource type="Texture2D" uid="uid://tc2tr15858ad" path="res://assets/gardening/leaves/Basil_01.PNG" id="6_kg073"]
 [ext_resource type="Texture2D" uid="uid://dsi4dlnflkdi1" path="res://assets/gardening/leaves/Basil_02.PNG" id="7_dybb2"]
@@ -123,6 +124,19 @@ zoom = Vector2(2.4, 2.4)
 
 [node name="Background" type="Sprite2D" parent="."]
 texture = ExtResource("5_mex0m")
+
+[node name="winlabel" type="Label" parent="."]
+visible = false
+top_level = true
+offset_left = -198.0
+offset_top = -45.0
+offset_right = 212.0
+offset_bottom = 45.0
+size_flags_horizontal = 4
+theme_override_constants/outline_size = 20
+theme_override_fonts/font = ExtResource("3_t5m2y")
+theme_override_font_sizes/font_size = 80
+text = "CONGRATS!"
 
 [node name="Basil01" type="Area2D" parent="."]
 collision_layer = 5
