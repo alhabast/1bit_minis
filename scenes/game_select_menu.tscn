@@ -22,14 +22,19 @@ grow_vertical = 2
 color = Color(0, 0, 0, 1)
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
-layout_mode = 0
-offset_left = 208.0
-offset_right = 248.0
-offset_bottom = 40.0
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -368.0
+offset_right = 368.0
+offset_bottom = 343.0
+grow_horizontal = 2
 theme_override_constants/margin_top = 52
 
 [node name="Label" type="Label" parent="MarginContainer"]
 layout_mode = 2
+size_flags_horizontal = 4
 theme_override_fonts/font = ExtResource("2_n0rje")
 theme_override_font_sizes/font_size = 128
 text = "Choose Game
